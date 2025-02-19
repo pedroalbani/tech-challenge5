@@ -60,3 +60,18 @@ Sobre os arquivos disponíveis no drive acima
 
 - **`convert_kaggle.py`**: Processa os dados de validação, transformando o histórico de interações em um formato adequado para submissão no Kaggle​convert_kaggle.
 - **`topk.py`**: Utiliza o histórico de interações dos usuários para calcular os top 10 itens mais acessados por cada usuário​topk.
+
+
+## Processamento de dados ##
+
+Antes de treinar o modelo, na etapa de tratamento dos dados (feature store), iremos inputar um dado de categoria baseado no Título e Subtítulo das notícias, em um cenário real/ideal utilizariamos um outro Modelo de Machine Learning que através da cariação de tokens a partir do texto (após a limpeza de "fillers"), seria capaz de categorizar os dados. Contudo, como esse não é o objetivo principal do projeto, sendo apenas um ponto que achamos interessante adicionar, iremos fazer de uma forma mais rudimentar.
+
+Iremos predefinir grupos de palavras que esperamos encontrar, enquanto subdividimos as matérias em 3 categorias: G1 (Notícias em geral), GE (Notícias esportivas) e EGO (entretenimento e afins), baseado nesses grupos pré definidos (salvos numa coleção do mongo) e utilizando a geração de tokens dos textos previamente citados usando o scikit learn, criaremos mais um ponto importante a ser levado em consideração durante a sugestão de próximas matérias.
+
+O fluxo dos dados será o seguinte:
+<img src="./docs/img/data-flow.svg">
+
+## Fluxo de vida do Modelo
+O modelo treinado será exportado para um .pickle usando Ml Flow, suas sugestões serão salvas em uma collection do MongoDB, e junto com os dados futuros serão utilizados para avaliação do modelo em ambiente de produção (essa parte é apenas como teorizamos que isso funcionará em um ambiente real, não está no escopo do projeto atual), onde os clicks do usuário e o tempo passado nas páginas poderiam ser considerados a melhor forma de feedback.
+
+<img src="./docs/img/life-cicle.svg">
