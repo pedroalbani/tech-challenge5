@@ -74,4 +74,4 @@ O fluxo dos dados será o seguinte:
 ## Fluxo de vida do Modelo
 O modelo treinado será exportado para um .pickle usando Ml Flow, suas sugestões serão salvas em uma collection do MongoDB, e junto com os dados futuros serão utilizados para avaliação do modelo em ambiente de produção (essa parte é apenas como teorizamos que isso funcionará em um ambiente real, não está no escopo do projeto atual), onde os clicks do usuário e o tempo passado nas páginas poderiam ser considerados a melhor forma de feedback.
 
-<img src="./docs/img/life-cicle.svg">
+<img src="./docs/img/life-cycle.svg">
