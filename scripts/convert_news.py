@@ -23,16 +23,18 @@ def chooseCategoryByWordIncidence(url, title, summary):
     else:
         return max(counts, key=lambda key: counts[key])
     
+def getData():
+    itens_path = "data/raw/news/"
+    files = [f for f in os.listdir(itens_path) if f.startswith("itens-parte")]
 
-itens_path = "data/raw/news/"
-files = [f for f in os.listdir(itens_path) if f.startswith("itens-parte")]
+    # Carregar os arquivos de itens
+    df_itens_list = [pd.read_csv(os.path.join(itens_path, file)) for file in files]
+    df_itens = pd.concat(df_itens_list, ignore_index=True)
 
-# Carregar os arquivos de itens
-df_itens_list = [pd.read_csv(os.path.join(itens_path, file)) for file in files]
-df_itens = pd.concat(df_itens_list, ignore_index=True)
+    # Remove a coluna de body, que não será relevante para a nossa análise
+    df_itens = df_itens.drop(columns=["body"])
+    df_itens["category"] = np.vectorize(chooseCategoryByWordIncidence)(df_itens["url"],df_itens["title"],df_itens["caption"])
+    #df_itens.to_csv('data/processed/news.csv')
 
-# Remove a coluna de body, que não será relevante para a nossa análise
-df_itens = df_itens.drop(columns=["body"])
-df_itens["category"] = np.vectorize(chooseCategoryByWordIncidence)(df_itens["url"],df_itens["title"],df_itens["caption"])
+    return df_itens
 
-df_itens.to_csv("data/processed/news.csv")
