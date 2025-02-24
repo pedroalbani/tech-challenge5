@@ -10,7 +10,7 @@ if (db.getUser(process.env.MONGO_INITDB_ROOT_USERNAME) === null) {
 
 db = db.getSiblingDB(process.env.MONGO_INITDB_DATABASE);
 
-const collections = ['history', 'master-data', 'validation', 'news', 'categories'];
+const collections = ['history', 'master_data', 'validation', 'news', 'categories'];
 
 collections.forEach(collection => {
   if (!db.getCollectionNames().includes(collection)) {
