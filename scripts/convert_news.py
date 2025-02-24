@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
+import text_preprocessor as tp
+from datetime import datetime
 
 def chooseCategoryByWordIncidence(url, title, summary):
     categories = {'politica' : {'vota','politica','voto','stf','candidato','presidente','eleicoes','eleição','ministro','congresso','vereador','prefeito','vereadora','prefeita'},
@@ -13,6 +15,7 @@ def chooseCategoryByWordIncidence(url, title, summary):
     
     url = url.replace("/", " ").replace("-"," ")
     fulltext = " ".join([url, title, summary])
+    fulltext = tp.pre_proccess(fulltext)
 
     counts = dict.fromkeys(categories, 0)
     for word in fulltext.split(" "):
@@ -22,6 +25,33 @@ def chooseCategoryByWordIncidence(url, title, summary):
         return "geral"
     else:
         return max(counts, key=lambda key: counts[key])
+
+def chooseCategoryScore(cat, target):
+    if cat == target:
+        return 100
+    else:
+        return 0
+def getDateRelevance(creationDate, updateDate):
+    creationDate = creationDate.split('+')[0]
+    updateDate = updateDate.split('+')[0]
+
+    #para esse experimento, a data de atualização está sempre preenchida então por mais que recebamos os dois parametros aqui, apenas o updateDate precisa ser considerado
+    convertedCreationDate = datetime.strptime(creationDate, '%Y-%m-%d %H:%M:%S')
+    convertedUpdateDate = datetime.strptime(updateDate, '%Y-%m-%d %H:%M:%S')
+
+    cutDate = datetime(2022, 12, 1)
+    daysBetweenMoreRecentAndCurrent = abs((cutDate - convertedUpdateDate).days)
+
+    #o coeficiente de relevância vai estar diretamente ligado ao quão recente a noticia é, baseando se pela data de corte da noticia mais recente encontrada nos dados
+    if daysBetweenMoreRecentAndCurrent <= 7:
+        return 100
+    elif daysBetweenMoreRecentAndCurrent > 7 and daysBetweenMoreRecentAndCurrent <=14:
+        return 50
+    elif daysBetweenMoreRecentAndCurrent > 14 and daysBetweenMoreRecentAndCurrent <=28:
+        return 25
+    else:
+        return 12.25
+
     
 def getData():
     itens_path = "data/raw/news/"
@@ -34,7 +64,13 @@ def getData():
     # Remove a coluna de body, que não será relevante para a nossa análise
     df_itens = df_itens.drop(columns=["body"])
     df_itens["category"] = np.vectorize(chooseCategoryByWordIncidence)(df_itens["url"],df_itens["title"],df_itens["caption"])
-    #df_itens.to_csv('data/processed/news.csv')
+    df_itens["pol_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'politica')
+    df_itens["eco_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'economia')
+    df_itens["cul_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'cultura')
+    df_itens["tec_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'tecnologia')
+    df_itens["sau_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'saude')
+    df_itens["cri_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'criminal')
+    df_itens["ger_score"] = np.vectorize(chooseCategoryScore)(df_itens["category"],'geral')
+    df_itens["relevance_score"] = np.vectorize(getDateRelevance)(df_itens["issued"],df_itens["modified"])
 
     return df_itens
-

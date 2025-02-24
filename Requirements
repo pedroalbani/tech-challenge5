@@ -11,3 +11,4 @@ pytest
 jupyter
 matplotlib
 seaborn
+nltk
