@@ -1,0 +1,13 @@
+# Dockerfile.train
+
+FROM python:3.12
+
+WORKDIR /train
+
+COPY requirements-train.txt .
+
+RUN pip install --no-cache-dir -r requirements-train.txt
+
+COPY . .
+
+CMD ["python", "train.py"]
