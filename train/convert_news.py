@@ -1,18 +1,32 @@
 import os
 import pandas as pd
 import numpy as np
-import text_preprocessor as tp
-from datetime import datetime
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
+# Carregar variáveis do .env
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://root:example@localhost:27017/")
+DATABASE_NAME = os.getenv("MONGO_DATABASE", "tech_db")
+COLLECTION_NAME = os.getenv("MONGO_COLLECTION", "categories")
+
+def get_categories_from_mongo():
+    """ Obtém as categorias e palavras-chave diretamente do MongoDB. """
+    client = MongoClient(MONGO_URI)
+    db = client[DATABASE_NAME]
+    collection = db[COLLECTION_NAME]
+
+    categories = {}
+    for category in collection.find({}, {"_id": 0, "categoria": 1, "palavras_chave": 1}):
+        categories[category["categoria"]] = set(category["palavras_chave"])
+
+    client.close()
+    return categories
 
 def chooseCategoryByWordIncidence(url, title, summary):
-    categories = {'politica' : {'vota','politica','voto','stf','candidato','presidente','eleicoes','eleição','ministro','congresso','vereador','prefeito','vereadora','prefeita'},
-    'cultura' : {'atriz','filme','cultura','cinema','teatro','ator','série','show','música','arte','pop','artista','cantor','cantora','album'},
-    'tecnologia' : {'tecnologia','celular','game','console','smartphone','computador','notebook','tablet','streaming','elétrica','elétrico','aparelho','dispositivo'},
-    'saude' : {'doença','saúde','saude','bem-estar','epidemia','sintoma','remédio','medicina','médico','tratamento','vacina'},
-    'economia' : {'economia','imposto','renda','taxa','salário','tributação','dolar','real','euro','libra','R$','$', 'importar','importação','importacao'},
-    'criminal' : {'polícia','prisão','crime','assassinato','sequestro','morte','inocente','culpado','bandido','criminoso','delegado','morto','mandado','morre','morta','facada','arma','tiro'}}
-    
-    
+    categories = get_categories_from_mongo()
+
     url = url.replace("/", " ").replace("-"," ")
     fulltext = " ".join([url, title, summary])
     fulltext = tp.pre_proccess(fulltext)
