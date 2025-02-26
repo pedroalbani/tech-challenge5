@@ -1,27 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
-from dotenv import load_dotenv
-from pymongo import MongoClient
+import mongodb_client as mongoclient
+import text_preprocessor as tp
 
-# Carregar variáveis do .env
-load_dotenv()
-
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://root:example@localhost:27017/")
-DATABASE_NAME = os.getenv("MONGO_DATABASE", "tech_db")
-COLLECTION_NAME = os.getenv("MONGO_COLLECTION", "categories")
 
 def get_categories_from_mongo():
-    """ Obtém as categorias e palavras-chave diretamente do MongoDB. """
-    client = MongoClient(MONGO_URI)
-    db = client[DATABASE_NAME]
-    collection = db[COLLECTION_NAME]
-
-    categories = {}
-    for category in collection.find({}, {"_id": 0, "categoria": 1, "palavras_chave": 1}):
-        categories[category["categoria"]] = set(category["palavras_chave"])
-
-    client.close()
+    categories = mongoclient.list()
     return categories
 
 def chooseCategoryByWordIncidence(url, title, summary):
@@ -31,7 +16,7 @@ def chooseCategoryByWordIncidence(url, title, summary):
     fulltext = " ".join([url, title, summary])
     fulltext = tp.pre_proccess(fulltext)
 
-    counts = dict.fromkeys(categories, 0)
+    counts =  {cat["categoria"]: set(cat["palavras_chave"]) for cat in categories}
     for word in fulltext.split(" "):
         for cat_name, cat_words in categories.items():
             counts[cat_name] += word.lower() in cat_words
