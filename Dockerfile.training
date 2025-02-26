@@ -5,8 +5,8 @@ FROM python:3.10
 WORKDIR /train
 
 # Copiar arquivos necessários
-COPY ../requirements-train.txt /train/requirements.txt
-COPY ../train /train
+COPY requirements-train.txt /train/requirements.txt
+COPY train /train
 
 # Instalar dependências
 RUN pip install --no-cache-dir -r requirements.txt

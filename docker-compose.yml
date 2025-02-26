@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  mongo:
+    container_name: mongo_db_tech_5
+    image: mongo:latest
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    env_file:
+      - .env  # Garante que as variáveis do .env sejam carregadas
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    restart: always
+
+  mongo-express:
+    container_name: mongo_express
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env  # Garante que as variáveis do .env sejam carregadas
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+
+volumes:
+  mongo-data:
+
+
+# version: '3.8'
+
+# services:
+#   mongo:
+#     container_name: mongo_db_tech_5
+#     image: mongo:latest
+#     ports:
+#       - "27017:27017"  # Sem variável de ambiente para evitar erros
+#     volumes:
+#       - mongo-data:/data/db
+#       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro  # Adicionado ":ro" para garantir que o arquivo não seja modificado
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: root  # Definição fixa para garantir a leitura
+#       MONGO_INITDB_ROOT_PASSWORD: example
+#       MONGO_INITDB_DATABASE: admin
+#     restart: always
+
+#   mongo-express:
+#     container_name: mongo_express
+#     image: mongo-express
+#     restart: always
+#     depends_on:
+#       - mongo
+#     ports:
+#       - "8081:8081"
+#     environment:
+#       ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#       ME_CONFIG_MONGODB_ADMINPASSWORD: example
+#       ME_CONFIG_MONGODB_SERVER: mongo
+#       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/?authSource=admin
+#       ME_CONFIG_BASICAUTH_USERNAME: admin
+#       ME_CONFIG_BASICAUTH_PASSWORD: admin
+
+# volumes:
+#   mongo-data:
