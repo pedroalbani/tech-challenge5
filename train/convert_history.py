@@ -33,4 +33,5 @@ def explodeDataframe(df_completo):
 
 def getData():
     dataframe = fetch()
-    return explodeDataframe(dataframe)
+    exploded_df = explodeDataframe(dataframe)
+    

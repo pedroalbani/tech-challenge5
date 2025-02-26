@@ -13,3 +13,6 @@ seaborn
 detect-delimiter
 python-multipart
 joblib
+nltk
+python-dotenv
+pymongo

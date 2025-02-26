@@ -3,10 +3,11 @@ import pandas as pd
 import numpy as np
 import mongodb_client as mongoclient
 import text_preprocessor as tp
-
+import datetime
 
 def get_categories_from_mongo():
-    categories = mongoclient.list()
+    collection = 'categories'
+    categories = mongoclient.list_data(name=collection)
     return categories
 
 def chooseCategoryByWordIncidence(url, title, summary):
@@ -53,7 +54,7 @@ def getDateRelevance(creationDate, updateDate):
 
     
 def getData():
-    itens_path = "data/raw/news/"
+    itens_path = "train/data/raw/news/"
     files = [f for f in os.listdir(itens_path) if f.startswith("itens-parte")]
 
     # Carregar os arquivos de itens
@@ -73,3 +74,5 @@ def getData():
     df_itens["relevance_score"] = np.vectorize(getDateRelevance)(df_itens["issued"],df_itens["modified"])
 
     return df_itens
+
+getData()
