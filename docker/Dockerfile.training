@@ -1,0 +1,15 @@
+# Usar imagem oficial do Python
+FROM python:3.10
+
+# Definir diretório de trabalho dentro do container
+WORKDIR /train
+
+# Copiar arquivos necessários
+COPY ../requirements-train.txt /train/requirements.txt
+COPY ../train /train
+
+# Instalar dependências
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Executar o script de treinamento ao iniciar o container
+CMD ["python", "train.py"]

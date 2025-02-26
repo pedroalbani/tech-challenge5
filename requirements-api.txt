@@ -1,5 +1,7 @@
 fastapi
 uvicorn
+pymongo
+requests
 pydantic
 pandas
 numpy
@@ -11,5 +13,10 @@ pytest
 jupyter
 matplotlib
 seaborn
-nltk
-mlflow
+detect-delimiter
+python-dotenv
+passlib
+bcrypt
+pyjwt
+python-multipart
+joblib
