@@ -1,4 +1,3 @@
-from typing import Any
 from fastapi import APIRouter, Depends, Query
 from app.services.comercio_service import ComercioService
 from bson import json_util

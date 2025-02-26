@@ -1,5 +1,5 @@
 from urllib import request
-from app.backend import mongodb_connector
+from app.core import mongodb_connector
 from app.config.base_settings import AppConfiguration
 from pymongo.errors import ConnectionFailure
 from http import HTTPStatus

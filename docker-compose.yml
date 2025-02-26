@@ -1,6 +1,6 @@
 services:
   mongo:
-    container_name: mongo_db
+    container_name: mongo_db_tech_5
     image: mongo:latest
     ports:
       - ${MONGO_PORT:-27017}:27017
