@@ -3,14 +3,10 @@ uvicorn
 pymongo
 requests
 pydantic
-pandas
 numpy
-scikit-learn
-mlflow
 dvc
 python-dotenv
 pytest
-jupyter
 matplotlib
 seaborn
 detect-delimiter

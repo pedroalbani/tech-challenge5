@@ -1,7 +1,4 @@
-fastapi
-uvicorn
 pymongo
-requests
 pydantic
 pandas
 numpy
@@ -14,8 +11,5 @@ jupyter
 matplotlib
 seaborn
 detect-delimiter
-passlib
-bcrypt
-pyjwt
 python-multipart
 joblib
