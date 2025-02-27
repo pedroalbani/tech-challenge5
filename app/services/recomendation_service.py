@@ -12,7 +12,7 @@ class RecommendationService:
 
         print(f"Aplicando filtro: {filtro}")  # Log do filtro aplicado
 
-        categories = list(self.db.listar("categories", filtro))  # Obtém os registros
+        categories = list(self.db.listar("categories"))  # Obtém os registros
         print(f"Registros encontrados: {categories}")  # Log dos dados retornados
 
         if not categories:

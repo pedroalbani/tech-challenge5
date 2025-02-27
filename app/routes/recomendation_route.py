@@ -12,13 +12,13 @@ def get_recommendations(userid: str):
     if not userid:
         raise HTTPException(status_code=400, detail="O campo 'userid' é obrigatório.")
 
-    print(f"UserID recebido: {userid}")  # Log do usuário recebido
+    print(f"UserID recebido: {userid}")
 
-    filtro = {"user_id": userid}
+    filtro = {}
     recommendations = RecommendationService().get_all_categories(filtro)
 
     if not recommendations:
         raise HTTPException(status_code=404, detail="Nenhuma recomendação encontrada para esse usuário.")
 
-    print(f"Recommendations retornadas: {recommendations}")  # Log da resposta
+    print(f"Recommendations retornadas: {recommendations}")
     return recommendations

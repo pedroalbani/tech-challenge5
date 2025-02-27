@@ -6,7 +6,7 @@ from operator import itemgetter
 class PredictionService:
     def __init__(self):
         self.model_name = 'KNNBaseline'
-        self.version = "latest"
+        self.version = "latest" # sempre vai pegar a última versão
         self.db = MongoConnector()
 
     def load_model(self):
@@ -14,32 +14,41 @@ class PredictionService:
         model = mlflow.sklearn.load_model(model_uri)
 
         return model
-    
+
+    # função que faz a predição
+    # recebe o id do usuário e as notícias mais relevantes para ele
     def use_model(self, user_id, news):
-        model = self.load_model()
+        model = self.load_model() # carrega o modelo do mlflow
         predictions = []
         for new in news:
-            pred = model.predict(uid=user_id,iid =new['page']).est
-            predictions.append({'page':new["page"], 'strength':pred})
-        predictions = sorted(predictions, key=itemgetter('strength'), reverse=True)[:5]
+            pred = model.predict(uid=user_id,iid =new['page']).est # faz a predição
+            predictions.append({'page':new["page"], 'strength':pred}) # adiciona a predição na lista (noticia, força da predição)
+        predictions = sorted(predictions, key=itemgetter('strength'), reverse=True)[:5] # ordena as predições e pega as 5 mais fortes
 
+        # retorna as 5 notícias mais relevantes
         return predictions
-    
-    def suggest_news(self,user_id:str):        
+
+    # ponto de entrada da api
+    def suggest_news(self,user_id:str):
         user_db = self.db.buscar('data_users',{"userId": user_id})
         more_relevant_news = []
 
+        # caso o usuário exista, vai na master data para
+        # buscar as 100 noticias mais relevantes que o usuário não leu
         if(user_db is not None):
             more_relevant_news = self.db.listar_com_aggregate('master_data',[{"$match":{"userId":{"$ne":user_id}}},{"$group": {"_id": "$account_type", "sum_strength": {"$sum": "$strength"}}},{'$sort': {'sum_strength': -1}},{'$limit': 500}])
-            more_relevant_news = self.use_model(user_id,more_relevant_news) 
-        else:
+            # manda para o modelo para que seja feita a predição
+            more_relevant_news = self.use_model(user_id, more_relevant_news)
+        else: # caso o usuário não exista, pega as 10 noticias mais relevantes
             more_relevant_news =self.db.listar_com_aggregate('master_data',[{"$group": {"_id": "$account_type", "sum_strength": {"$sum": "$strength"}}},{'$sort': {'sum_strength': -1}},{'$limit': 10}])
 
+        # pega as noticias mais relevantes para o usuário
         news_for_user = self.db.listar('news',{ 'page': { '$in': [new['page'] for new in more_relevant_news ] } })
+        # monta o objeto de resposta
         user_pred = {'user':user_id, 'predictions': news_for_user, 'timestamp': datetime.now}
 
+        # salva a predição no banco
         self.db.salvar("predictions",user_pred)
         return user_pred
 
 PredictionService().suggest_news('teste')
-    
