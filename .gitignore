@@ -1,3 +1,4 @@
 train/data/raw/history/*
 train/data/raw/news/*
 venv/*
+train/__pycache__/*
