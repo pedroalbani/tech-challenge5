@@ -8,7 +8,7 @@ class PredictionService:
     def __init__(self):
         self.MLFLOW_HOST = os.getenv("MLFLOW_HOST", "http://127.0.0.1:8080")
         self.model_name = 'KNNBaseline'
-        self.version = "latest" # sempre vai pegar a última versão
+        self.model_version = "latest" # sempre vai pegar a última versão
         self.db = MongoConnector()
 
     def load_model(self):
@@ -48,9 +48,9 @@ class PredictionService:
         # pega as noticias mais relevantes para o usuário
         news_for_user = self.db.listar('news',{ 'page': { '$in': [new['_id'] for new in more_relevant_news ] } })
         # monta o objeto de resposta
-        user_pred = {'user':user_id, 'predictions': [ {'page':new['page'], 'url': new['url']} for new in news_for_user], 'timestamp': datetime.now()}
-
+        user_pred = [{'user':user_id, 'predictions': [ {'page':new['page'], 'url': new['url']} for new in news_for_user], 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]
         # salva a predição no banco
-        self.db.salvar("predictions",user_pred)
+        self.db.salvar('predictions',user_pred)
+        user_pred = [{'user':pred['user'], 'predictions': pred['predictions'], 'timestamp': pred['timestamp']} for pred in user_pred]
         return user_pred
 

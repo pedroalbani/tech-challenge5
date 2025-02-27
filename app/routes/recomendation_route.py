@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from app.services.prediction_service import PredictionService
 
 recommendation_route = APIRouter()
@@ -21,4 +22,4 @@ def get_recommendations(userid: str):
         raise HTTPException(status_code=404, detail="Nenhuma recomendação encontrada para esse usuário.")
 
     print(f"Recommendations retornadas: {recommendations}")
-    return recommendations
+    return JSONResponse(content=recommendations,status_code=200)
