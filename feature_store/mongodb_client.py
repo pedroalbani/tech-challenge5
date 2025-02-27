@@ -5,7 +5,7 @@ import os
 # Carregar variáveis do .env
 load_dotenv()
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://root:example@localhost:27017/")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://root:pass123@localhost:27017/")
 DATABASE_NAME = os.getenv("MONGO_DATABASE", "tech_db")
 
 def save(obj_list, name):
@@ -44,4 +44,3 @@ def get(name, filter:None):
     client.close()
 
     return data
-    

@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+pymongo
+requests
+pydantic
+numpy
+dvc
+python-dotenv
+pytest
+matplotlib
+seaborn
+detect-delimiter
+passlib
+bcrypt
+pyjwt
+python-multipart
+joblib
