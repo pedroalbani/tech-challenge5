@@ -5,23 +5,24 @@ load_dotenv()
 
 class DatabaseConfig:
     def __init__(self):
-        self.mongo_db_tech_5 = os.getenv('mongo_db_tech_5') or "localhost"
-        self.27017 = os.getenv('27017') or 27017
-        self.root = os.getenv('root')
-        self.pass123 = os.getenv('pass123')
-        self.tech_db = os.getenv('tech_db')
-        self.mongo_timeout_ms = os.getenv('MONGO_TIMEOUT_MS') or 15000
+        self.mongo_host = os.getenv('MONGO_DB_TECH_5', 'localhost')
+        self.mongo_port = int(os.getenv('MONGO_PORT', 27017))
+        self.mongo_user = os.getenv('MONGO_USER', 'root')
+        self.mongo_password = os.getenv('MONGO_PASSWORD', 'pass123')
+        self.mongo_db_name = os.getenv('MONGO_DB_NAME', 'tech_db')
+        self.mongo_timeout_ms = int(os.getenv('MONGO_TIMEOUT_MS', 15000))
 
     def get_database_url(self):
-        return f"mongodb://{self.root}:{self.pass123}@{self.mongo_db_tech_5}:{self.27017}/"
+        """Gera a URL de conexão com o MongoDB."""
+        return f"mongodb://{self.mongo_user}:{self.mongo_password}@{self.mongo_host}:{self.mongo_port}/"
 
     def get_database_name(self):
-        return self.tech_db
+        """Retorna o nome do banco de dados."""
+        return self.mongo_db_name
 
     def get_database_timeout_ms(self):
+        """Retorna o timeout da conexão em milissegundos."""
         return self.mongo_timeout_ms
 
-class AppConfiguration:
-    def __init__(self):
-        self.url_arquivo = os.getenv('BASEURL_ARQUIVO_IMPORTACAO')
-        self.url_fallback = os.getenv('BASEURL_ARQUIVO_FALLBACK')
+# Instância global para acesso às configurações
+db_config = DatabaseConfig()

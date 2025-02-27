@@ -1,39 +1,36 @@
-from urllib import request
 from app.core import mongodb_connector
-from app.config.base_settings import AppConfiguration
 from pymongo.errors import ConnectionFailure
-from http import HTTPStatus
 
-class HealthCheck():
+class HealthCheckService:
 
-    def __init__(self):
-        self.app_settings = AppConfiguration()
+    @staticmethod
+    def check():
+        """
+        Realiza um health check geral, verificando a API e a conexão com o MongoDB.
 
-    def check(self):
-        mongo = self.check_mongo()
-        embrapa = self.check_embrapa()
-
-        is_healthy = mongo and embrapa
+        Retorna:
+            dict: Dicionário contendo os status dos serviços.
+        """
+        mongo_status = HealthCheckService.check_mongo()
 
         return {
-            "healthy": is_healthy,
+            "healthy": mongo_status,
             "services": {
-                "mongo": mongo,
-                "embrapa": embrapa
+                "mongo": mongo_status
             }
         }
-    
-    def check_mongo(self):
+
+    @staticmethod
+    def check_mongo():
+        """
+        Verifica a conectividade com o banco de dados MongoDB.
+
+        Retorna:
+            bool: True se o banco estiver acessível, False caso contrário.
+        """
         try:
             mongo_connector = mongodb_connector.MongoConnector(timeoutMs=1000)
-            mongo_connector.db.command("ping")
+            mongo_connector.db.command("ping")  # Teste de ping no MongoDB
             return True
         except ConnectionFailure:
-            return False
-        
-    def check_embrapa(self):
-        try:
-            status_code = request.urlopen(self.app_settings.url_arquivo).getcode()
-            return status_code == HTTPStatus.OK
-        except:
             return False

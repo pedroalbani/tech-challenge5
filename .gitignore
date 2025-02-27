@@ -1,4 +1,3 @@
-train/data/raw/history/*
-train/data/raw/news/*
+feature_store/data/raw/history/*
+feature_store/data/raw/news/*
 venv/*
-train/__pycache__/*
