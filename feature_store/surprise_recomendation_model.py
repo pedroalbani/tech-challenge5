@@ -56,13 +56,15 @@ def scaleData(dataset):
 def train_model():
     mlflow.set_tracking_uri(uri=MLFLOW_HOST)
     df_masterdata = master_data.getMasterData()
+    max_strength = df_masterdata["strength"].max()
+    min_strength = df_masterdata["strength"].min()
     df_masterdata = scaleData(df_masterdata)
     input_sample = df_masterdata.head(50)
 
     print(df_masterdata.head())
     print(list(df_masterdata.columns.values))
 
-    reader = Reader(rating_scale=(1, 100))
+    reader = Reader(rating_scale=(min_strength, max_strength))
 
     data = Dataset.load_from_df(df_masterdata[["userId", "page", "strength"]], reader)
     trainset, testset = train_test_split(data, test_size=0.25)
