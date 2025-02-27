@@ -35,7 +35,7 @@ def explodeDataframe(df_completo):
 def getData():
     dataframe = fetch()
     user_df = dataframe[['userId','userType']]
-    mongoclient.save(obj_list=exploded_df.to_dict('records'),name='data_users')
+    mongoclient.save(obj_list=user_df.to_dict('records'),name='data_users')
 
     exploded_df = explodeDataframe(dataframe)
 
