@@ -23,8 +23,8 @@ def getMasterData():
     df_master['strength'] = np.vectorize(defineEventStrength)(df_master["timeOnPage"],df_master["scrollPercentage"],df_master["pageVisitsCount"],df_master['numberOfClicks'],df_master['relevance_score'])
     
     #Pegando apenas 500k registros
-    df_master = df_master.head(500000)
-
-    mongoclient.save(obj_list=df_master.to_dict("records"),name='master_data')
+    df_master = df_master.head(100000)
+    
+    mongoclient.save(obj_list=df_master.reset_index().to_dict("records"),name='master_data')
 
     return df_master
