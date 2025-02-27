@@ -1,8 +1,4 @@
 import subprocess
-import data_loader
+import surprise_recomendation_model as model
 
-subprocess.run(["python", "primeiro arquivo aqui.py"], check=True)
-
-df = data_loader.load_data()
-
-print(f"Dados carregados: {df.shape}")
+model.train_model()
