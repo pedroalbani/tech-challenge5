@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.services.recomendation_service import RecommendationService
+from app.services.prediction_service import PredictionService
 
 recommendation_route = APIRouter()
 
@@ -15,7 +15,7 @@ def get_recommendations(userid: str):
     print(f"UserID recebido: {userid}")
 
     filtro = {}
-    recommendations = RecommendationService().get_all_categories(filtro)
+    recommendations = PredictionService().suggest_news(userid)
 
     if not recommendations:
         raise HTTPException(status_code=404, detail="Nenhuma recomendação encontrada para esse usuário.")
