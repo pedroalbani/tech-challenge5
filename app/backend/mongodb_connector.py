@@ -17,4 +17,4 @@ class MongoConnector:
     def listar(self, collection,filtro={}):
         return self.db[collection].find(filtro)
     def listar_com_aggregate(self,collection,cond_aggreg=[]):
-        return self.db[collection].aggregate(cond_aggreg)
+        return list(self.db[collection].aggregate(cond_aggreg))
