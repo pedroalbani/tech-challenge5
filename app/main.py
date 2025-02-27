@@ -5,7 +5,7 @@ from app.routes.auth import router as auth_route, get_current_active_user
 from app.backend.mongodb_connector import MongoConnector
 
 app = FastAPI(
-    title="Embrapa Tech Challenge"
+    title="Tech Challenge - 5"
 )
 # app.include_router(comercio_route, dependencies=[Depends(get_current_active_user)])
 app.include_router(infra_route)
