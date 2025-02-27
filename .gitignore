@@ -1,3 +1,7 @@
 feature_store/data/raw/history/*
 feature_store/data/raw/news/*
 venv/*
+
+## ignore all .pyc files and the __pycache__ directory
+*.pyc
+__pycache__/
