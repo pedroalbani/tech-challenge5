@@ -2,7 +2,7 @@ pymongo
 pydantic
 pandas
 numpy
-scikit-learn
+surprise
 mlflow
 dvc
 python-dotenv

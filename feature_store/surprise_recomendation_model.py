@@ -49,7 +49,7 @@ def scaleData(dataset):
 
     df_scaled = ct.fit_transform(dataset)
 
-    dataset['strength'] = df_scaled['num_preprocess__strength']    
+    dataset['strength'] = df_scaled['num_preprocess__strength']
     dataset = dataset[dataset['strength'] > 0]
     return dataset.reset_index()
 
@@ -83,5 +83,3 @@ def train_model():
 
     algo = KNNBaseline(sim_options=knn_options)
     runModel(algo,trainset,testset,'KNN Experimentation',knn_options,"KNNBaseline","Experiment with Scikit Surprise KNN Baseline model",input_sample)
-
-
