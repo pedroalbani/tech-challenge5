@@ -10,7 +10,7 @@ if (db.getUser("root") === null) {
 
 db = db.getSiblingDB('tech_db');  // Nome do banco de dados correto
 
-const collections = ['history', 'master_data', 'validation', 'news', 'categories'];
+const collections = ['master_data', 'categories'];
 
 collections.forEach(collection => {
   if (!db.getCollectionNames().includes(collection)) {
